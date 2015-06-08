@@ -1,15 +1,20 @@
 import csv
 #import simplejson as json
 import json
+import pprint
 from collections import Counter # available in Python 2.7 and newer
+
+
 phys = {}
 id = {}
 
-def getFromDict(physician_dict, atr_list):
-	return reduce(lambda d, k: d[k], atr_list, physician_dict)
+# helps access info from nested dictionaries
+def getFromDict(physician_dict, attr_list):
+	return reduce(lambda d, k: d[k], attr_list, physician_dict)
 
-def setInDict(physician_dict, atr_list, value):
-	getFromDict(physician_dict, atr_list[:-1]) [atr_list[-1]] = value
+# edits info in nested dictionaries
+def setInDict(physician_dict, attr_list, value):
+	getFromDict(physician_dict, attr_list[:-1]) [attr_list[-1]] = value
 
 #open csv file
 with open('C:\Users\Desmond\Documents\GitHub\patient-viz\cms\DE1_0_2008_to_2010_Inpatient_Claims_Sample_10.csv', 'r') as csvfile:
@@ -42,18 +47,17 @@ with open('C:\Users\Desmond\Documents\GitHub\patient-viz\cms\DE1_0_2008_to_2010_
 						diag[diagId] = 1
 					else:
 						diag[diagId] += 1
+				phys[id] = {'category': [cat], 'diagnosis': diag}	
 			else:
 				for x in range(1, 10):
 					diagId = row[prefix + str(x)]
-					if diagId not in id['diagnosis']:
-						setInDict(phys, [id,'diagnosis', diagId], 1)
+					if diagId not in phys[id]['diagnosis']:
+						setInDict(phys, [id, 'diagnosis', diagId], 1)
 					else:
-						temp = getFromDict(phys,'diagnosis', diagId]) 
+						temp = getFromDict(phys,[id, 'diagnosis', diagId]) 
 						setInDict(phys, [id, 'diagnosis', diagId], ++temp)
-			if id in phys and cat not in phys[id][cat]:
-				phys[id]['category'].append(cat)
-			if not id in phys:
-				id = {'category': [cat], 'diagnosis': diag}
+				if cat not in phys[id]['category']:
+					phys[id]['category'].append(cat)
 	csvfile.close()
 				
 	with open ('json_format.txt', 'wb') as jsonfile:
