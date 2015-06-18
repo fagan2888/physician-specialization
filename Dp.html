@@ -1,0 +1,35 @@
+var dataset;
+
+<script type="text/javascript">
+        Modernizr.load({
+                test: Modernizr.svg && Modernizr.inlinesvg,
+                yep : [ 'js/d3.v3.min.js',
+                        'js/script.js' ]
+        });
+</script>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <script type = "text/javascript" src = "../d3/d3.v3.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            d3.json("json_format.txt", function(error, json) {
+			
+				if (error) {	//If error is not null, something went wrong.
+					console.log(error);	//Log the error.
+				}
+				else {	//If no error, the file loaded correctly.  Yay!
+					console.log(json)	//Log output to console
+				
+				//Hand JSON data off to global var,
+				//so it's accessible later.
+				dataset = json;
+				}
+			});
+   	</script>
+	<p> New paragraph! </p>
+    </body>
+</html>
